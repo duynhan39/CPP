@@ -1,0 +1,227 @@
+// File: polycalc.cpp
+//  menu­driven, interactive polynomial calculator
+//
+// ­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­
+// Class: CS 215		Instructor: Dr. Deborah Hwang
+// Assignment: Project 3 	Date assigned: Sep 27
+// Programmer: Duy Nhan Cao	Date completed: Oct 10
+
+#include "polynomial.h"     // Polynomial Class
+#include <vector>           // vector
+#include <iostream>         // operator >> and <<
+#include <math.h>           // pow
+#include <algorithm>        // abs
+using namespace std;
+// Explicit value constructor
+Polynomial::Polynomial(vector<int> initial_coefficients, vector<int> initial_exponents)
+{
+    vector<int> coef(initial_exponents[0]+1, 0);
+    for(int i=0; i<initial_coefficients.size(); i++)
+    {
+        coef[initial_exponents[i]]=initial_coefficients[i];
+    }
+    for(int i=initial_exponents[0]; i>0; i--)
+    {
+        if(coef[i]==0)
+            coef.pop_back();
+        else
+            break;
+    }
+    coefficients=coef;
+}
+// Fucntion: degree
+// Return: Polynomial's degree
+int Polynomial::degree() const
+{
+    return coefficients.size()-1;
+}
+// Function: evaluate
+// Return: an evaluation of polynomial with value x
+double Polynomial::evaluate(double x) const
+{
+    double result=0;
+    for(int i=0; i<=degree(); i++)
+    {
+        result+=coefficients[i]*pow(x, i);
+    }
+    return result;
+}
+// Operator+
+// Return the sum of 2 polynomials
+Polynomial operator+ (const Polynomial lhs_poly, // Recieved: left hand side polynomial
+		      const Polynomial rhs_poly  // Recieved: righ hand side polynomial
+		      )
+{
+    int size_max = max(lhs_poly.degree(), rhs_poly.degree())+1;
+    int size_min = min(lhs_poly.degree(), rhs_poly.degree())+1;
+    vector<int> sum(size_max,0);
+    for(int i=0; i<size_min; i++)
+        sum[i]=rhs_poly.coefficients[i]+lhs_poly.coefficients[i];
+    if(lhs_poly.degree()<rhs_poly.degree())
+        for(int i=size_min; i<size_max; i++)
+            sum[i]=rhs_poly.coefficients[i];
+    else if(lhs_poly.degree()>rhs_poly.degree())
+        for(int i=size_min; i<size_max; i++)
+            sum[i]=lhs_poly.coefficients[i];
+    else
+        for(int i=size_max-1; i>0; i--)
+        {
+            if(sum[i]==0)
+                sum.pop_back();
+            else
+                break;
+        } // remove all the 0s in the end of the coefficients
+    Polynomial sum_poly;
+    sum_poly.coefficients=sum;
+    return sum_poly;
+} // end operator+
+// Operator*
+Polynomial operator* (Polynomial lhs_poly, Polynomial rhs_poly)
+{
+    int size = lhs_poly.degree()+rhs_poly.degree()+1;
+    vector<int> sum(size,0);
+    for(int i=0; i<=lhs_poly.degree(); i++)
+        for(int j=0; j<=rhs_poly.degree(); j++)
+            sum[i+j]+=lhs_poly.coefficients[i]*rhs_poly.coefficients[j];
+    for(int i=size-1; i>0; i--)
+    {
+        if(sum[i]==0)
+            sum.pop_back();
+        else
+            break;
+    } // remove all the 0s in the end of the coefficients
+    Polynomial sum_poly;
+    sum_poly.coefficients=sum;
+    return sum_poly;
+}
+// I/O operator<<
+std::ostream & operator<< (std::ostream & out_stream, const Polynomial & a_poly)
+{
+    int dg = a_poly.degree();
+    vector<int> coef = a_poly.coefficients;
+    if(dg==0)
+        out_stream << coef[0];
+    else
+    {
+        if(dg!=1)
+        {
+            if(abs(coef[dg])!=1)
+                out_stream << coef[dg];
+            if(coef[dg]==-1)
+                out_stream<<"-";
+            out_stream << "x^" << dg;
+            for(int i=1; i<dg-1; i++)
+            {
+                if(coef[dg-i]==0)
+                    continue;
+                else if(coef[dg-i]>0)
+                    out_stream << "+";
+                else
+                    out_stream << "-";
+                if(abs(coef[dg-i])!=1)
+                    out_stream << abs(coef[dg-i]);
+                out_stream << "x^" << dg-i;
+            }
+        } // end steps terms' degree is higher than 1 
+        if(coef[1]!=0)
+        {
+            if(coef[1]>0 && dg!=1)
+                out_stream << "+";
+            else if(coef[1]<0)
+                out_stream << "-";
+            if(abs(coef[1])!=1)
+                out_stream << abs(coef[1]);
+            out_stream << "x";
+        }
+        if(coef[0]!=0)
+        {
+            if(coef[0]>0)
+                out_stream << "+";
+            out_stream << coef[0];
+        }
+    } // end print_out
+    return out_stream;
+} // end operator<<
+// I/O operator>>
+std::istream & operator>> (std::istream & in_stream, Polynomial & a_poly)
+{
+    int num=1;
+    int expo=0;
+    int degree=0;
+    char sign;
+    // Read in the first term to get the degree
+    in_stream>>sign;
+    in_stream.putback(sign);
+    if(sign=='-')
+    {
+        num=-1;
+        in_stream>>sign;
+    }
+    if(in_stream.peek()!='x')
+    {
+        if(num==-1)
+            in_stream.putback(sign);
+        in_stream>>num;
+        if(in_stream.fail())
+            return in_stream;
+    }
+    if(in_stream.peek()!='x')
+    {
+        a_poly.coefficients={num};
+        return in_stream;
+    }
+    in_stream.ignore();
+    if(in_stream.peek()!='^')
+        degree=1;
+    else
+    {
+        in_stream.ignore();
+        in_stream>>degree;
+        if(in_stream.fail())
+            return in_stream;
+    }
+    // Create a vector with the size of degree+1
+    vector<int> coef(degree+1, 0);
+    coef[degree]=num;
+    while(1)
+    {
+        bool neg=false;
+        num=1;
+        if(in_stream.peek()!='+' && in_stream.peek()!='-')
+            break;
+        in_stream>>sign;
+        if(in_stream.fail())
+            return in_stream;
+        if(sign=='-')
+        {
+            neg=true;
+            num=-1;
+        }
+        if(in_stream.peek()!='x')
+        {
+            if(neg)
+                in_stream.putback(sign);
+            in_stream>>num;
+            if(in_stream.fail())
+                return in_stream;
+            if(in_stream.peek()!='x')
+            {
+                coef[0]=num;
+                break;
+            }
+        }
+        in_stream.ignore();
+        if(in_stream.peek()=='^')
+        {
+            in_stream.ignore();
+            in_stream>>expo;
+            if(in_stream.fail())
+                return in_stream;
+        }
+        else
+            expo=1;
+        coef[expo]=num;
+    } // end while loop of reading terms by terms
+    a_poly.coefficients=coef;
+    return in_stream;
+} // end of operator>>

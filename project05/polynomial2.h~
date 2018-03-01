@@ -1,0 +1,38 @@
+// File: polynomial.h
+//
+// ----------------------------------------------------------
+// Class: CS 215               Instructor: Dr. Deborah Hwang
+// Assignment: Project 5       Date assigned:
+// Programmer: Duy Nhan Cao    Date completed:
+
+#ifndef POL2
+#define POL2
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Polynomial
+{
+private:
+#include "term.h"
+public:
+    
+    Polynomial();
+    Polynomial(vector<int> initial_coefficients, vector<int> initial_exponents);
+    Polynomial(const Polynomial &original) noexcept;
+    ~Polynomial();
+    Polynomial operator= (const Polynomial & source);
+    int degree() const;
+    int evaluate(const int x) const;
+    friend Polynomial operator+ (const Polynomial & left_poly, const Polynomial & right_poly);
+    friend Polynomial operator* (const Polynomial & left_poly, const Polynomial & right_poly);
+    friend std::ostream & operator<< (std::ostream & out_stream, const Polynomial & a_poly);
+    friend std::istream & operator>> (std::istream & in_stream, Polynomial & a_poly);
+private:
+    friend void removeZero(Polynomial::Term *&first);
+    friend void insert_in_order(Polynomial::Term *&first, Polynomial::Term *curr);
+    Term *head;
+};
+
+#endif

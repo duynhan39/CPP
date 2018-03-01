@@ -1,0 +1,32 @@
+// File: polycalc.cpp
+//  menu­driven, interactive polynomial calculator
+//
+// ­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­
+// Class: CS 215		Instructor: Dr. Deborah Hwang
+// Assignment: Project 3 	Date assigned: Sep 27
+// Programmer: Duy Nhan Cao	Date completed: Oct 10
+
+#ifndef POL_H_
+#define POL_H_
+#include <iostream>
+#include <vector>
+
+class Polynomial
+{
+public:
+    Polynomial(std::vector<int> initial_coefficients={0}, std::vector<int> initial_exponents={0});
+    int degree() const;
+    double evaluate(double x) const;
+    // Friend functions
+    friend Polynomial operator+ (const Polynomial lhs_poly, const Polynomial rhs_poly);
+    friend Polynomial operator* (const Polynomial lhs_poly, const Polynomial rhs_poly);
+    // I/O operators
+    // ostream is the type of cout, it is the lhs parameter
+    // The actual ostream, object is returned, so the return type is ostream &, a reference to the returned object
+    friend std::istream & operator>> (std::istream & in_stream, Polynomial & a_poly);
+    friend std::ostream & operator<< (std::ostream & out_stream, const Polynomial & a_poly);
+private:
+    std::vector<int> coefficients;
+};
+
+#endif

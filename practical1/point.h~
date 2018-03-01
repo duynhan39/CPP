@@ -1,0 +1,29 @@
+// File: point.h
+// Definition of the Point class
+// ----------------------------------------------------------------------
+// Class: CS 215                      
+// Assignment: Programming Practical Exam 1, Problem 2
+// Programmer: <FILL IN YOUR NAME!!>
+// Date: September 20, 2017
+
+#ifndef POINT_H_
+#define POINT_H_
+
+class Point
+{
+   public:  // Operations
+
+      // Constructors
+      Point ();
+
+      // Accessors
+      double x_coord () const;
+      double y_coord () const;
+
+   private:  // Attributes
+
+      double x, y;  // Coordinates for point (x,y)
+
+};  // end Point class
+
+#endif // POINT_H_

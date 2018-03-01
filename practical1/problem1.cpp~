@@ -1,0 +1,40 @@
+#include <iostream>
+#include <fstream>
+#include <cstdliv>
+
+int com(int n, int k);
+
+int main (int argc, char * argv[])
+{
+  using namespace std;
+  if(argc!=3)
+    {
+      cout << "Usage: " <<argv[0]<<"<input file><output file>" <<endl;
+      exit(1);
+    }
+  ifstream inFile(argv[1]);
+  ofstream outFile(argv[2]);
+  if(!inFile)
+    {
+      cout<<"Error opening input file " << argv[1] << endl;
+      exit(1);
+    }
+  if(!outFile)
+    {
+      cout<<"Error opening output file " << argv[2] << endl;
+      exit(1);
+    }
+  int n, k
+  while(inFile>>n)
+    {
+      inFile>>k;
+      outFile<< "Number of combination for " << n << " choose " << k << " is " << com(n, k) << endl;
+    }
+}
+int com(int n, int k)
+{
+  if(k==1 || k==n)
+    return 1;
+  else
+    return com(n-1, k-1)+com(n-1, k);
+}

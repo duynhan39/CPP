@@ -1,0 +1,100 @@
+//Duy Nhan Cao
+//Blob Finder
+
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstdlib>
+
+
+
+void mark(char grid[52][52], int y, int x, char& fill);
+void printFile(char grid[52][52], std::ofstream& outFile, int num, int n);
+
+int main(int argc, char *argv[])
+{
+    using namespace std;
+    // Check for correct number of arguments
+    if(argc!=3)
+    {
+        cout << "Usage: " <<argv[0]<<"<input file><outfile>" <<endl;
+        exit(1);
+    }
+    // Open files
+    ifstream inFile(argv[1]);
+    ofstream outFile(argv[2]);
+    //Check for successful opens
+    if(!inFile)
+    {
+        cout<<"Error opening input file " << argv[1] <<endl;
+        exit(1);
+    }
+    if(!outFile)
+    {
+        cout<<"Error opening output file " << argv[2] <<endl;
+        exit(1);
+    }
+    // Fill the margins
+    int n;
+    inFile >> n;
+    char grid[52][52];
+    for(int i=0; i<n+2; i++)
+    {
+        grid[i][0]='.';
+        grid[i][n+1]='.';
+        grid[0][i]='.';
+        grid[0][n+1]='.';
+    }
+    // Read the grid
+    for(int i=1; i<=n; i++)
+        for(int j=1; j<=n; j++)
+        {
+            inFile >> grid[i][j];
+        }
+
+    // Find new blob and mark it
+    char letter='a'-1;
+    for(int i=1; i<=n; i++)
+        for(int j=1; j<=n; j++)
+            if(grid[i][j]=='*')
+            {
+                letter++;
+                mark(grid, i, j, letter);
+            }
+    int blob_num = letter-'a'+1;
+    printFile(grid, outFile, blob_num, n);
+
+    inFile.close();
+    outFile.close();
+    return 0;
+}
+
+void mark(char grid[52][52], int y, int x, char& fill)
+{
+    grid[y][x]=fill;
+    //Check right
+    if(grid[y][x+1]=='*')
+        mark(grid, y, x+1, fill);
+    //Check left
+    if(grid[y][x-1]=='*')
+        mark(grid, y, x-1, fill);
+    //Check up
+    if(grid[y+1][x]=='*')
+        mark(grid, y+1, x, fill);
+    //Check down
+    if(grid[y-1][x]=='*')
+        mark(grid, y-1, x, fill);
+}
+
+void printFile(char grid[52][52], std::ofstream& outFile, int num, int n)
+{
+    using namespace std;
+    outFile << "There are " << num <<" blob(s) in this file." << endl;
+    outFile << endl;
+    for(int i=1; i<=n; i++)
+    {
+        for(int j=1; j<=n; j++)
+	  outFile << grid[i][j];
+	outFile << endl;
+    }  
+}

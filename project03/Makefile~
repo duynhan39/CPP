@@ -1,0 +1,16 @@
+# File: Makefile
+# Class: CS 215
+# Assignment: Project 3 
+# Programmer: Duy Nhan Cao
+
+polycalc: polycalc.o polynomial.o
+	clang++ -Wall -o polycalc polycalc.o polynomial.o
+
+# Compile with -g to retain debugging information
+polycalc.o: polycalc.cpp polynomial.h
+	clang++ -std=c++11 -g -Wall -c polycalc.cpp
+
+polynomial.o: polynomial.cpp polynomial.h
+	clang++ -std=c++11 -g -Wall -c polynomial.cpp
+clean:
+	rm -f *.o polycalc *~

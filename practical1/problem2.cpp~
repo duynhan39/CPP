@@ -1,0 +1,26 @@
+// File: problem2.cpp
+// A program to test the Point class
+// ----------------------------------------------------------------------
+// Class: CS 215                      
+// Assignment: Programming Practical Exam 1, Problem 2
+// Programmer: <FILL IN YOUR NAME!!>
+// Date: September 20, 2017
+
+#include <iostream>      // <<, >>, endl;
+#include "point.h"       // Point class
+using namespace std;
+
+double distance_between(const Point & p1, const Point & p2);
+
+int main ()  // no command line arguments
+{
+
+   Point p1;             //  Default constructed: (0,0)
+
+   cout << "Default constructed point\n";
+   cout << "   x-coordinate: " << p1.x_coord() << endl;
+   cout << "   y-coordinate: " << p1.y_coord() << endl;
+
+   return 0;
+}  // end main
+

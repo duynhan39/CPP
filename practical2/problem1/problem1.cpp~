@@ -1,0 +1,46 @@
+// File: problem1.cpp
+// A program that tests exchange_sort
+//
+// Class: CS 215                     Instructor: Dr. Deborah Hwang
+// Date: November 8 & 9, 2017
+// Assignment: Practical Exam 2, Problem 1
+// Programmer: *** FILL IN YOUR NAME ***
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstdlib>
+
+void read_vector (std::vector<int> & v, std::istream & in);
+
+int main ()
+{
+   using namespace std;
+
+
+
+   // Read in data from file
+   read_vector (the_vector, infile);
+
+   cout << "The elements of vector v are: " << endl;
+// *** WRITE CALL TO DISPLAY the_vector ON SCREEN HERE ***
+
+
+   // Sort the data
+// *** WRITE CALL TO SORT the_vector HERE ***
+
+
+   outfile << "\nAfter sorting, the elements of vector v are: " << endl;
+// *** WRITE CALL TO WRITE the_vector TO OUTPUT FILE HERE ***
+
+ 
+   return 0;
+}
+
+void read_vector (std::vector<int> & v, std::istream & in)
+{
+   int value;
+   v.clear();
+   while (in >> value)
+      v.push_back(value);
+}

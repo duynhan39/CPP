@@ -1,0 +1,26 @@
+// File: point.cpp
+// Implementation of the Point class operations
+// ----------------------------------------------------------------------
+// Class: CS 215                      
+// Assignment: Programming Practical Exam 1, Problem 2
+// Programmer: <FILL IN YOUR NAME!!>
+// Date: Septebmer 20, 2017
+
+#include "point.h"
+
+// Constructors
+Point::Point() : x(0.0), y(0.0)
+{
+
+}
+
+// Accessors
+double Point::x_coord () const
+{
+   return x;
+}  // end get_x
+
+double Point::y_coord () const
+{
+   return y;
+}  // end get_y
